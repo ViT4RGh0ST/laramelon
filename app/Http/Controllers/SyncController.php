@@ -46,7 +46,7 @@ class SyncController extends Controller
             $created = $model['class']::where(
                 [
                     ['created_at', '>', $lastPulledAt],
-                    ['deleted_at', '=', null]
+                    ['deleted_at', '=', 0]
                 ]
             )->get();
             if(count($created) > 0){
@@ -62,7 +62,7 @@ class SyncController extends Controller
                 [
                     ['updated_at', '>', $lastPulledAt],
                     ['created_at', '<', $lastPulledAt],
-                    ['deleted_at', '=', null]
+                    ['deleted_at', '=', 0]
                 ]
             )->get();
 
@@ -73,7 +73,9 @@ class SyncController extends Controller
             $deleted = $model['class']::select('id')->where('deleted_at', '>', $lastPulledAt)->get();
 
             if(count($deleted) > 0){
-                $changes->{$model['table']}->deleted = $deleted;
+                foreach($deleted as $toDelete){
+                    $changes->{$model['table']}->deleted [] = $toDelete->id;
+                }
             }
         }
 

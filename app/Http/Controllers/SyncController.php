@@ -126,7 +126,7 @@ class SyncController extends Controller
                     {
                         $object = $model['class']::find($update['id']);
 
-                        if($object && !is_null($object->deleted_at))
+                        if($object && $object->deleted_at != 0)
                         {
                             abort(422, $update['id'] . ' this record have been deleted on server already');
                         }
